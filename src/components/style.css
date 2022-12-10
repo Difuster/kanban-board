@@ -1,0 +1,69 @@
+.board {
+  background-color:rgb(64, 145, 216);
+  height: 100vh;
+  color:rgb(249, 237, 221);
+  padding-top: 25px;
+}
+
+.board>h1 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 25px;
+}
+
+.disp-fl-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.column {
+  width: 24vw;
+  margin: 5px;
+  background-color: rgb(237, 232, 232);
+  border-radius: 5px;
+  color:rgb(7, 10, 13);
+  padding: 10px 10px;
+}
+
+.column__header {
+  font-weight: bold;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(7, 10, 13);
+  margin-bottom: 30px;
+}
+
+.column__header h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+  padding-bottom: 5px;
+}
+
+.column__header p {
+  cursor: pointer;
+}
+
+.column__add-card {
+  width: 100%;
+  padding: 5px 10px;
+  border: 1px solid rgba(204, 199, 199, 0.963);
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.card__title {
+  justify-content: space-between;
+  cursor: pointer;
+  align-items: center;
+}
+
+.card__title>img {
+  display: none;
+}
+
+.card__title:hover img {
+  display: block;
+}
