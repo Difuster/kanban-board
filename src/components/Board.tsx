@@ -1,53 +1,56 @@
-import React, {FC, useState} from "react";
+import React, { FC, useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-// import Col from "react-bootstrap/Col";
+import Col from "react-bootstrap/Col";
 import Column from "./column/Column";
 import Header from "./Header";
 import "./style.css";
+import { IColumn, ICard, IComment } from "../types/types";
+import { Context } from "../reducer/reducer";
 
-interface BoardProps {
-  name: string;
-};
+const Board: FC = () => {
+  const { state, dispatch } = useContext(Context);
+  const columns = state.columns;
+  const cards = state.cards;
+  const comments = state.comments;
 
-interface column {
-  id: number;
-  name: string;
-};
+  interface renderColumnProps {
+    columns: IColumn[];
+    cards: ICard[];
+    comments: IComment[];
+    dispatch: any;
+  };
 
-const state = {
-  columns: [
-    { id: 1, name: "TODO" },
-    { id: 2, name: "In Progress" },
-    { id: 3, name: "Testing" },
-    { id: 4, name: "Done" },
-  ]
-};
+  const renderColumns = (value: renderColumnProps) => {
+    return (
+      columns.map((col) => {
+        return (
+          <Col
+            key={col.id}
+            className="column"
+          >
+            <Column
+              columnId={col.id}
+              columnTitle={col.title}
+              comments={value.comments}
+              dispatch={value.dispatch}
+            />
+          </Col>
+        )
+      })
+    )
+  };
 
-const Board: FC<BoardProps> = ({name}) => {
-  const [columns, setColumns] = useState<column[]>(state.columns)
   return (
-    <div className="board">
-      <Header />
-      <hr />
-      <Container fluid>
-        <Row>
-          {
-            columns.map((col) => {
-              return (
-                <Column
-                  key={col.id}
-                  id={col.id}
-                  name={col.name}
-                  columns={columns}
-                  setColumns={setColumns}
-                />
-              )
-            })
-          }
-        </Row>
-      </Container>
-    </div>
+    <Container className="board" fluid>
+      <Row>
+        <Header />
+        <hr />
+      </Row>
+      <Row>
+        {renderColumns({ columns, cards, comments, dispatch })}
+      </Row>
+    </Container>
   )
 }
 

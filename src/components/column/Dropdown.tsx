@@ -1,23 +1,16 @@
-import React, {FC, useState} from "react";
-import Dropdown from 'react-bootstrap/Dropdown';
-import EditTitleModal from "./EditTitleModal";
-
-interface column {
-  id: number;
-  name: string;
-};
+import React, { FC, useState } from "react";
+import Dropdown from "react-bootstrap/Dropdown";
+import EditColumnModal from "./EditColumnModal";
 
 interface DropdownMenuProps {
   columnId: number;
-  columns: column[];
-  setColumns: (arg: column[]) => void;
 };
 
-const DropdownMenu: FC<DropdownMenuProps> = ({columnId, columns, setColumns}) => {
+const DropdownMenu: FC<DropdownMenuProps> = ({ columnId }) => {
   const [show, setShow] = useState(false);
-  const handleShow = () => {
-    setShow(true);
-  }
+
+  const handleShow = () => setShow(true);
+
   return (
     <>
       <Dropdown>
@@ -29,12 +22,10 @@ const DropdownMenu: FC<DropdownMenuProps> = ({columnId, columns, setColumns}) =>
           <Dropdown.Item onClick={() => alert("Sorry")}>Delete List</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
-      <EditTitleModal
+      <EditColumnModal
         show={show}
         setShow={setShow}
         columnId={columnId}
-        columns={columns}
-        setColumns={setColumns}
       />
     </>
   );

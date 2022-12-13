@@ -1,6 +1,5 @@
 .board {
-  background-color:rgb(64, 145, 216);
-  height: 100vh;
+  background-size: 100%;
   color:rgb(249, 237, 221);
   padding-top: 25px;
 }
@@ -18,11 +17,13 @@
   flex-wrap: nowrap;
 }
 
+.border-color-grey {
+  background-color: rgb(237, 232, 232);
+}
+
 .column {
   width: 24vw;
   margin: 5px;
-  background-color: rgb(237, 232, 232);
-  border-radius: 5px;
   color:rgb(7, 10, 13);
   padding: 10px 10px;
 }
