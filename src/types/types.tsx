@@ -2,8 +2,6 @@ export interface IState {
   columns: IColumn[];
   cards: ICard[];
   comments: IComment[];
-  columnModalIsShown: boolean;
-  cardModal: ICardModal;
 };
 
 export interface IColumn {
@@ -26,13 +24,9 @@ export interface IComment {
   userName: string,
 };
 
-export interface ICardModal {
-  isShown: boolean,
-  activeCardId: number,
-};
-
 export enum ActionType {
   AddCard,
+  DeleteCard,
   RenameColumn,
   SaveDescription,
   UpdateComments,
@@ -41,6 +35,11 @@ export enum ActionType {
 export interface AddCard {
   type: ActionType.AddCard;
   payload: ICard;
+};
+
+export interface DeleteCard {
+  type: ActionType.DeleteCard;
+  payload: number;
 };
 
 export interface RenameColumn {

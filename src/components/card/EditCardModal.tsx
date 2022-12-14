@@ -1,12 +1,16 @@
 import React, { FC, useState, useContext, useEffect, useRef } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Context } from "../../reducer/reducer";
-import { saveDescription, updateComments } from "../../reducer/reducer";
+import { saveDescription, updateComments, deleteCard } from "../../reducer/reducer";
+import dustbin from "../../assets/images/dustbin.png";
+import EditCommentModal from "./EditCommentModal";
+import { IComment } from "../../types/types";
 
 interface EditTitleModalProps {
   columnId: number;
@@ -27,9 +31,16 @@ const EditCardModal: FC<EditTitleModalProps> = ({
 
   // local states
   const [comments, setComments] = useState(allComments);
-  const [currentCardCommentsToShow, setCurrentCardCommentsToShow] = useState(currentCardComments);
-  console.log("currentCardComments", currentCardComments);
-  console.log("comments", comments);
+  const [currentCardCommentsToRender, setCurrentCardCommentsToRender] = useState(currentCardComments);
+  const [commentModalIsShown, setCommentModalIsShown] = useState(false);
+  const [clickedComment, setClickedComment] = useState({
+    cardId: NaN,
+    id: NaN,
+    text: "",
+    userName: "",
+  });
+  // const [isFormInput, setIsFormInput] = useState(false);
+  // const [commentInputValue, setCommentInputValue] = useState("");
   // input values
   const [descriptionValue, setDescriptionValue] = useState(card.description);
   const [commentsValue, setCommentsValue] = useState("Write a comment...");
@@ -44,7 +55,7 @@ const EditCardModal: FC<EditTitleModalProps> = ({
     setComments([]);
   };
 
-  const handleSaveDescription = (e: any) => {
+  const handleSaveDescription = (e: any): void => {
     e.preventDefault();
     setDescriptionValue(descriptionValue);
   };
@@ -67,10 +78,10 @@ const EditCardModal: FC<EditTitleModalProps> = ({
       userName: userName,
     };
     const newComments = [...comments, newComment];
-    const newCurrentCardCommentsToShow = [...currentCardCommentsToShow, newComment];
+    const newCurrentCardCommentsToRender = [...currentCardCommentsToRender, newComment];
     setCommentsValue("Write a comment...");
     setComments(newComments);
-    setCurrentCardCommentsToShow(newCurrentCardCommentsToShow);
+    setCurrentCardCommentsToRender(newCurrentCardCommentsToRender);
   };
 
   const handleChangeCommentsValue = (e: any) => {
@@ -79,6 +90,19 @@ const EditCardModal: FC<EditTitleModalProps> = ({
 
   const handleClickOnIput = () => {
     commentInput.current?.select();
+  };
+
+  const handleOpenEditCommentModal = (com: IComment) => {
+    setCommentModalIsShown(true);
+    setClickedComment(com);
+  };
+
+  const handleDeleteComment = (e: any, colId: number) => {
+    e.preventDefault();
+    const newComments = comments.filter(comment => comment.id !== colId);
+    const newCurrentCardCommentsToRender = currentCardCommentsToRender.filter(comment => comment.id !== colId);
+    setComments(newComments);
+    setCurrentCardCommentsToRender(newCurrentCardCommentsToRender);
   };
    
   useEffect(() => {
@@ -93,69 +117,116 @@ const EditCardModal: FC<EditTitleModalProps> = ({
         <Container>
           <Row className="fw-bold">{card.title}</Row>
           <Row className="mb-6">in list {currentColumn.title}</Row>
+          <Row className="mb-6">created by {userName}</Row>
         </Container>
       </Modal.Header>
       <Modal.Body>
         <Container>
-        <Form>
-        <Form.Group className="mb-3">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            style={{minHeight: "100px"}}
-            name="description"
-            value={descriptionValue}
-            type="text"
-            autoComplete="off"
-            className="me-2"
-            onChange={handleChangeDescriptionValue}
-          />
-          <Button
-            type="submit"
-            variant="success"
-            onClick={handleSaveDescription}
-          >
-            Save
-          </Button>
-          {" "}
+          {
+          commentModalIsShown ?
+            <EditCommentModal
+              show={commentModalIsShown}
+              setShow={setCommentModalIsShown}
+              comment={clickedComment}
+              comments={comments}
+              setComments={setComments}
+            /> :
+            null
+          }
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                style={{minHeight: "100px"}}
+                name="description"
+                value={descriptionValue}
+                type="text"
+                autoComplete="off"
+                className="me-2"
+                onChange={handleChangeDescriptionValue}
+              />
+              <Button
+                type="submit"
+                variant="success"
+                onClick={handleSaveDescription}
+              >
+                Save
+              </Button>
+              {" "}
+              <Button
+                type="submit"
+                variant="danger"
+                onClick={handleDeleteDescription}
+              >
+                Delete
+              </Button>
+            </Form.Group>
+          </Form>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Comments</Form.Label>
+              <ListGroup>
+                {currentCardCommentsToRender.map((comment) => {
+                  return (
+                    <ListGroup.Item key={comment.id}>
+                      <Container>
+                        <Row onClick={() => handleOpenEditCommentModal(comment)}>
+                          <span>
+                            {comment.text}
+                          </span>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <span className="text-end">commented by {userName}</span>
+                          </Col>
+                          <Col>
+                            <Button
+                              type="submit"
+                              variant="danger"
+                              onClick={(e) => handleDeleteComment(e, comment.id)}
+                              className="p-0"
+                              style={{height: "28px", width: "28px"}}
+                            >
+                              <img src={dustbin} alt="delete comment" />
+                            </Button>
+                          </Col>
+                        </Row>
+                      </Container>
+                    </ListGroup.Item>
+                  )
+                })}
+              </ListGroup>
+              <Form.Control
+                onSubmit={handleSaveComment}
+                style={{minHeight: "50px"}}
+                name="comments"
+                value={commentsValue}
+                type="text"
+                autoComplete="off"
+                className="me-2"
+                ref={commentInput}
+                onChange={handleChangeCommentsValue}
+                onClick={handleClickOnIput}
+              />
+              <Button
+                type="submit"
+                variant="success"
+                onClick={handleSaveComment}
+              >
+                Add Comment
+              </Button>
+            </Form.Group>
+          </Form>
+        </Container>
+        <Container>
           <Button
             type="submit"
             variant="danger"
-            onClick={handleDeleteDescription}
+            onClick={() => dispatch(deleteCard(cardId))}
           >
-            Delete
+            <img src={dustbin} alt="delete card" />{" "}Delete Card
           </Button>
-        </Form.Group>
-      </Form>
-      <Form>
-        <Form.Group className="mb-3">
-          <Form.Label>Comments</Form.Label>
-          <ListGroup>
-            {currentCardCommentsToShow.map((comment) => {
-              return (
-                <ListGroup.Item key={comment.id}>
-                  {comment.text}
-                </ListGroup.Item>
-              )
-            })}
-          </ListGroup>
-          <Form.Control
-            onSubmit={handleSaveComment}
-            style={{minHeight: "50px"}}
-            name="comments"
-            value={commentsValue}
-            type="text"
-            autoComplete="off"
-            className="me-2"
-            ref={commentInput}
-            onChange={handleChangeCommentsValue}
-            onClick={handleClickOnIput}
-          />
-          <Button type="submit" variant="success" onClick={handleSaveComment}>
-            Add Comment
-          </Button>
-        </Form.Group>
-      </Form>
         </Container>
       </Modal.Body>
     </Modal>

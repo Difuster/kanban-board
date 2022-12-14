@@ -1,7 +1,7 @@
 import React, { createContext } from "react";
 import {
   IState, ICard, IColumn, IComment, ActionType, 
-  AddCard, RenameColumn, SaveDescription, UpdateComments,
+  AddCard, DeleteCard, RenameColumn, SaveDescription, UpdateComments,
 } from "../types/types";
 
 export const initialState: IState = {
@@ -13,17 +13,19 @@ export const initialState: IState = {
   ],
   cards: [], // columnId, id, title, description, userId
   comments: [], // cardId, id, text, userName
-  columnModalIsShown: false,
-  cardModal: {
-    isShown: false,
-    activeCardId: 0,
-  },
 };
 
 export const addCard = (card: ICard): AddCard => {
   return {
     type: ActionType.AddCard,
     payload: card,
+  };
+};
+
+export const deleteCard = (cardId: number): DeleteCard => {
+  return {
+    type: ActionType.DeleteCard,
+    payload: cardId,
   };
 };
 
@@ -48,7 +50,7 @@ export const updateComments = (comments: IComment[]): UpdateComments => {
   };
 };
 
-type Actions = AddCard | RenameColumn | SaveDescription | UpdateComments;
+type Actions = AddCard | DeleteCard | RenameColumn | SaveDescription | UpdateComments;
 
 export function boardReducer(state: IState, action: Actions): IState {
   switch (action.type) {
@@ -66,6 +68,12 @@ export function boardReducer(state: IState, action: Actions): IState {
     case ActionType.AddCard:
       state.cards.push(action.payload);
       return state;
+    case ActionType.DeleteCard:
+      const newCards = state.cards.filter(card => card.id !== action.payload)
+      return {
+        ...state,
+        cards: newCards,
+      };
     case ActionType.SaveDescription:
       return { 
         ...state,
@@ -75,12 +83,12 @@ export function boardReducer(state: IState, action: Actions): IState {
           }
           return card;
         })
-      }
+      };
     case ActionType.UpdateComments:
       return {
         ...state,
         comments: action.payload,
-      }
+      };
     default:
       return state;
   }
