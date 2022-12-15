@@ -1,4 +1,4 @@
-import React, { FC, useState, useContext, useEffect, useRef } from "react";
+import React, { FC, useState, useContext, useRef } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -9,6 +9,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { Context } from "../../reducer/reducer";
 import { saveDescription, updateComments, deleteCard } from "../../reducer/reducer";
 import dustbin from "../../assets/images/dustbin.png";
+import cardIcon from "../../assets/images/card.png";
 import EditCommentModal from "./EditCommentModal";
 import { IComment } from "../../types/types";
 
@@ -39,9 +40,7 @@ const EditCardModal: FC<EditTitleModalProps> = ({
     text: "",
     userName: "",
   });
-  // const [isFormInput, setIsFormInput] = useState(false);
-  // const [commentInputValue, setCommentInputValue] = useState("");
-  // input values
+
   const [descriptionValue, setDescriptionValue] = useState(card.description);
   const [commentsValue, setCommentsValue] = useState("Write a comment...");
 
@@ -84,10 +83,6 @@ const EditCardModal: FC<EditTitleModalProps> = ({
     setCurrentCardCommentsToRender(newCurrentCardCommentsToRender);
   };
 
-  const handleChangeCommentsValue = (e: any) => {
-    setCommentsValue(e.target.value);
-  };
-
   const handleClickOnIput = () => {
     commentInput.current?.select();
   };
@@ -104,20 +99,25 @@ const EditCardModal: FC<EditTitleModalProps> = ({
     setComments(newComments);
     setCurrentCardCommentsToRender(newCurrentCardCommentsToRender);
   };
-   
-  useEffect(() => {
-    document.addEventListener("keyup", (e) => {
-      if (e.code === "Escape") handleCloseClick();
-    });
-  })
 
   return (
-    <Modal show={modalIsShown}>
+    <Modal show={modalIsShown} onEscapeKeyDown={handleCloseClick}>
       <Modal.Header closeButton onHide={handleCloseClick}>
         <Container>
-          <Row className="fw-bold">{card.title}</Row>
-          <Row className="mb-6">in list {currentColumn.title}</Row>
-          <Row className="mb-6">created by {userName}</Row>
+          <Row className="fw-bold">
+            <img src={cardIcon} alt="card" style={{width: "50px", height: "24px"}}/>
+            {card.title}
+          </Row>
+          <Row className="mb-6">
+            <span className="ms-6">
+              in list {currentColumn.title}
+            </span>
+          </Row>
+          <Row className="mb-6">
+            <span className="ms-6">
+              created by {userName}
+            </span>
+          </Row>
         </Container>
       </Modal.Header>
       <Modal.Body>
@@ -138,12 +138,12 @@ const EditCardModal: FC<EditTitleModalProps> = ({
               <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
-                style={{minHeight: "100px"}}
+                className="me-2 mb-3"
+                style={{minHeight: "105px"}}
                 name="description"
                 value={descriptionValue}
                 type="text"
                 autoComplete="off"
-                className="me-2"
                 onChange={handleChangeDescriptionValue}
               />
               <Button
@@ -166,29 +166,38 @@ const EditCardModal: FC<EditTitleModalProps> = ({
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>Comments</Form.Label>
-              <ListGroup>
+              <ListGroup className="rounded-0">
                 {currentCardCommentsToRender.map((comment) => {
                   return (
-                    <ListGroup.Item key={comment.id}>
+                    <ListGroup.Item
+                      key={comment.id}
+                      className="mb-2 border border-dark"
+                      style={{cursor: "pointer"}}
+                    >
                       <Container>
-                        <Row onClick={() => handleOpenEditCommentModal(comment)}>
+                        <Row
+                          className="mb-2"
+                          onClick={() => handleOpenEditCommentModal(comment)}
+                        >
                           <span>
                             {comment.text}
                           </span>
                         </Row>
                         <Row>
                           <Col>
-                            <span className="text-end">commented by {userName}</span>
+                            <span className="text-end"><em>commented by {userName}</em></span>
                           </Col>
-                          <Col>
+                          <Col style={{textAlign: "right"}}>
                             <Button
-                              type="submit"
                               variant="danger"
                               onClick={(e) => handleDeleteComment(e, comment.id)}
                               className="p-0"
                               style={{height: "28px", width: "28px"}}
                             >
-                              <img src={dustbin} alt="delete comment" />
+                              <img src={dustbin}
+                                alt="delete comment"
+                                style={{paddingBottom: "3px"}}
+                              />
                             </Button>
                           </Col>
                         </Row>
@@ -199,14 +208,14 @@ const EditCardModal: FC<EditTitleModalProps> = ({
               </ListGroup>
               <Form.Control
                 onSubmit={handleSaveComment}
+                className="me-2 mb-2"
                 style={{minHeight: "50px"}}
                 name="comments"
                 value={commentsValue}
                 type="text"
                 autoComplete="off"
-                className="me-2"
                 ref={commentInput}
-                onChange={handleChangeCommentsValue}
+                onChange={(e) => setCommentsValue(e.target.value)}
                 onClick={handleClickOnIput}
               />
               <Button
@@ -221,11 +230,13 @@ const EditCardModal: FC<EditTitleModalProps> = ({
         </Container>
         <Container>
           <Button
+          className="d-sm-flex flex-row justify-content-between align-items-center"
             type="submit"
             variant="danger"
             onClick={() => dispatch(deleteCard(cardId))}
           >
-            <img src={dustbin} alt="delete card" />{" "}Delete Card
+            <img src={dustbin} alt="delete card" />
+            <span className="ms-2">Delete Card</span>
           </Button>
         </Container>
       </Modal.Body>

@@ -9,7 +9,8 @@ import CardItem from "../card/CardItem";
 import DropdownMenu from "./Dropdown";
 import "../style.css";
 import { addCard } from "../../reducer/reducer";
-import { ICard, IComment } from "../../types/types";
+import { IComment } from "../../types/types";
+import card from "../../assets/images/card.png";
 
 interface ColumnsProps {
   columnId: number;
@@ -57,16 +58,21 @@ const Column: FC<ColumnsProps> = (value) => {
   };
 
   return (
-    <Container>
-      <Row className="border-color-grey p-2">
-        <Col className="disp-fl-row column__header">
-          <p>{columnTitle}</p>
+    <Container
+      className="border border-1 rounded-2"
+      style={{backgroundColor: "rgb(237, 232, 232)"}}
+    >
+      <Row className="p-2">
+        <Col
+          className="d-sm-flex flex-row justify-content-between border-bottom border-dark mb-1"
+        >
+          <p><span><strong>{columnTitle}</strong></span></p>
           <DropdownMenu
             columnId={columnId}
           />
         </Col>
       </Row>
-      <Row className="border-color-grey p-2">
+      <Row className="p-2">
         <ListGroup className="p-0 border-0">
           <CardItem
             columnId={columnId}
@@ -74,14 +80,20 @@ const Column: FC<ColumnsProps> = (value) => {
           />
         </ListGroup>
       </Row>
-      <Row className="border-color-grey p-2">
+      <Row className="p-2">
         {
           !addFormIsShown ?
           <Container
             onClick={handleOpenFormClick}
-            className="column__add-card"
+            className="border border-2 rounded-2 p-2 d-md-flex align-items-center"
+            style={{cursor: "pointer"}}
           >
-            + Add a card
+            <img
+              src={card}
+              alt="add card"  
+            />
+            {" "}
+            <span className="ms-2">Add a card</span>
           </Container> :
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">

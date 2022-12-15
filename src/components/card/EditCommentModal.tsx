@@ -1,13 +1,8 @@
-import React, { FC, useState, useContext, useEffect, useRef } from "react";
+import React, { FC, useState } from "react";
 import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import ListGroup from "react-bootstrap/ListGroup";
-import { Context } from "../../reducer/reducer";
-import { saveDescription, updateComments, deleteCard } from "../../reducer/reducer";
-import dustbin from "../../assets/images/dustbin.png";
 import { IComment } from "../../types/types";
 
 interface EditCommentModalProps {
@@ -36,9 +31,14 @@ const EditCommentModal: FC<EditCommentModalProps> = ({
   };
 
   return (
-    <Modal show={show}>
-      <Container className="border border-2 border-primary rounded bg-primary text-white">
-        <Modal.Header closeButton>
+    <Modal show={show} centered onEscapeKeyDown={() => setShow(false)} backdrop="static" keyboard={false}>
+      <Container
+        className="border border-2 border-primary rounded text-white"
+        style={{backgroundColor: "rgb(64, 145, 216)"}}>
+        <Modal.Header closeButton
+          className="mb-3"
+          onHide={() => setShow(false)}
+        >
           Edit Comment
         </Modal.Header>
         <Form.Control
@@ -47,9 +47,10 @@ const EditCommentModal: FC<EditCommentModalProps> = ({
           type="text"
           value={inputValue}
           autoComplete="off"
-          className="me-2 rounded bg-primary text-white"
+          className="me-2 mb-3 rounded"
         />
         <Button
+          className="mb-3"
           type="submit"
           variant="success"
           onClick={handleSaveComment}

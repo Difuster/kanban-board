@@ -19,7 +19,7 @@ const DropdownMenu: FC<DropdownMenuProps> = ({ columnId }) => {
         </Dropdown.Toggle>
         <Dropdown.Menu>
           <Dropdown.Item onClick={handleShow}>Edit Title</Dropdown.Item>
-          <Dropdown.Item onClick={() => alert("Sorry")}>Delete List</Dropdown.Item>
+          <Dropdown.Item>Delete List</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
       <EditColumnModal

@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useContext } from "react";
+import React, { FC, useState, useEffect, useContext, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -28,14 +28,14 @@ const EditTitleModal: FC<EditTitleModalProps> = ({ show, setShow, columnId }) =>
 
   const handleCloseClick = () => setShow(false);
 
+  const inputRef = useRef<HTMLInputElement>(null!);
+
   useEffect(() => {
-    document.addEventListener("keyup", (e) => {
-      if (e.code === "Escape") setShow(false);
-    });
-  }, [setShow])
+    inputRef.current?.select();
+  })
 
   return (
-    <Modal show={show}>
+    <Modal show={show} onEscapeKeyDown={() => setShow(false)}>
       <Modal.Header closeButton onHide={handleCloseClick}>
         <Modal.Title>Edit title?</Modal.Title>
       </Modal.Header>
@@ -43,12 +43,13 @@ const EditTitleModal: FC<EditTitleModalProps> = ({ show, setShow, columnId }) =>
         <Form onSubmit={handleSaveClick}>
           <Form.Group className="mb-3">
             <Form.Control
-              name="name"
+              name="title"
               value={inputValue}
               type="text"
               autoComplete="off"
               onChange={handleOnChange}
               className="me-2"
+              ref={inputRef}
             />
           </Form.Group>
           <Button

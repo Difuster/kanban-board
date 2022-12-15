@@ -5,8 +5,8 @@ import Col from "react-bootstrap/Col";
 import Column from "./column/Column";
 import Header from "./Header";
 import "./style.css";
-import { IColumn, ICard, IComment } from "../types/types";
 import { Context } from "../reducer/reducer";
+import { IColumn, ICard, IComment } from "../types/types";
 
 const Board: FC = () => {
   const { state, dispatch } = useContext(Context);
@@ -27,7 +27,7 @@ const Board: FC = () => {
         return (
           <Col
             key={col.id}
-            className="column"
+            className="m-1 p-2 text-dark"
           >
             <Column
               columnId={col.id}

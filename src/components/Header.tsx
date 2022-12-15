@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -31,6 +31,7 @@ const Header: FC = () => {
 
         <Navbar.Brand
           href="#home"
+          className="fs-4"
           style={{color: "rgb(249, 237, 221)"}}
         >
           Kanban Board
