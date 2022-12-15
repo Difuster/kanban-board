@@ -1,7 +1,7 @@
 import React, { createContext } from "react";
 import {
   IState, ICard, IColumn, IComment, ActionType, 
-  AddCard, DeleteCard, RenameColumn, SaveDescription, UpdateComments,
+  AddCard, RenameCard, DeleteCard, RenameColumn, SaveDescription, UpdateComments,
 } from "../types/types";
 
 export const initialState: IState = {
@@ -19,6 +19,13 @@ export const addCard = (card: ICard): AddCard => {
   return {
     type: ActionType.AddCard,
     payload: card,
+  };
+};
+
+export const renameCard = (cardId: number, cardTitle: string): RenameCard => {
+  return {
+    type: ActionType.RenameCard,
+    payload: { cardId, cardTitle },
   };
 };
 
@@ -50,7 +57,7 @@ export const updateComments = (comments: IComment[]): UpdateComments => {
   };
 };
 
-type Actions = AddCard | DeleteCard | RenameColumn | SaveDescription | UpdateComments;
+type Actions = AddCard | RenameCard | DeleteCard | RenameColumn | SaveDescription | UpdateComments;
 
 export function boardReducer(state: IState, action: Actions): IState {
   switch (action.type) {
@@ -68,6 +75,17 @@ export function boardReducer(state: IState, action: Actions): IState {
     case ActionType.AddCard:
       state.cards.push(action.payload);
       return state;
+    case ActionType.RenameCard:
+      const mappedCards = state.cards.map((card) => {
+        if (card.id === action.payload.cardId) {
+          card.title = action.payload.cardTitle;
+        }
+        return card;
+      })
+      return {
+        ...state,
+        cards: mappedCards,
+      };
     case ActionType.DeleteCard:
       const newCards = state.cards.filter(card => card.id !== action.payload)
       return {

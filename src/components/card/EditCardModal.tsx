@@ -16,12 +16,12 @@ import { IComment } from "../../types/types";
 interface EditTitleModalProps {
   columnId: number;
   cardId: number;
-  modalIsShown: boolean;
-  setModalIsShown: any;
+  show: boolean;
+  setShow: (arg0: boolean) => void;
 };
 
 const EditCardModal: FC<EditTitleModalProps> = ({
-  columnId, cardId, modalIsShown, setModalIsShown
+  columnId, cardId, show, setShow
 }) => {
   const { state, dispatch } = useContext(Context);
   const currentColumn = state.columns.filter(column => column.id === columnId)[0];
@@ -48,7 +48,7 @@ const EditCardModal: FC<EditTitleModalProps> = ({
 
   // handlers  
   const handleCloseClick = () => {
-    setModalIsShown(false);
+    setShow(false);
     dispatch(saveDescription(card.id, descriptionValue));
     dispatch(updateComments(comments));
     setComments([]);
@@ -101,7 +101,7 @@ const EditCardModal: FC<EditTitleModalProps> = ({
   };
 
   return (
-    <Modal show={modalIsShown} onEscapeKeyDown={handleCloseClick}>
+    <Modal show={show} onEscapeKeyDown={handleCloseClick}>
       <Modal.Header closeButton onHide={handleCloseClick}>
         <Container>
           <Row className="fw-bold">

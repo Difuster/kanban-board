@@ -26,6 +26,7 @@ export interface IComment {
 
 export enum ActionType {
   AddCard,
+  RenameCard,
   DeleteCard,
   RenameColumn,
   SaveDescription,
@@ -35,6 +36,16 @@ export enum ActionType {
 export interface AddCard {
   type: ActionType.AddCard;
   payload: ICard;
+};
+
+export interface IRenameCard {
+  cardId: number,
+  cardTitle: string,
+};
+
+export interface RenameCard {
+  type: ActionType.RenameCard;
+  payload: IRenameCard;
 };
 
 export interface DeleteCard {

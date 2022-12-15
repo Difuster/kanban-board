@@ -31,13 +31,13 @@ const EditTitleModal: FC<EditTitleModalProps> = ({ show, setShow, columnId }) =>
   const inputRef = useRef<HTMLInputElement>(null!);
 
   useEffect(() => {
-    inputRef.current?.select();
+    inputRef.current?.focus();
   })
 
   return (
     <Modal show={show} onEscapeKeyDown={() => setShow(false)}>
       <Modal.Header closeButton onHide={handleCloseClick}>
-        <Modal.Title>Edit title?</Modal.Title>
+        <Modal.Title>Edit List Title</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSaveClick}>

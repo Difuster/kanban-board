@@ -7,7 +7,7 @@ import { IComment } from "../../types/types";
 
 interface EditCommentModalProps {
   show: boolean;
-  setShow: any,
+  setShow: (rg0: boolean) => void,
   comment: IComment,
   comments: IComment[]
   setComments: any;
@@ -31,7 +31,7 @@ const EditCommentModal: FC<EditCommentModalProps> = ({
   };
 
   return (
-    <Modal show={show} centered onEscapeKeyDown={() => setShow(false)} backdrop="static" keyboard={false}>
+    <Modal show={show} centered backdrop="static" keyboard={false}>
       <Container
         className="border border-2 border-primary rounded text-white"
         style={{backgroundColor: "rgb(64, 145, 216)"}}>

@@ -3,8 +3,7 @@ import Card from "react-bootstrap/Card";
 import { Context } from "../../reducer/reducer";
 import { IComment } from "../../types/types";
 import ListGroup from "react-bootstrap/ListGroup";
-import EditCardModal from "./EditCardModal";
-import edit from "../../assets/images/edit.png";
+import DropdownMenu from "./Dropdown";
 import comment from "../../assets/images/comment.png";
 
 interface CardItemProps {
@@ -17,27 +16,11 @@ const CardItem: FC<CardItemProps> = ({ columnId, comments }) => {
 
   const currentCards = state.cards.filter((card) => card.columnId === columnId);
 
-  const [clickedCardId, setClickedCardId] = useState(0);
-  const [modalIsShown, setModalIsShown] = useState(false);
-
-  const handleOpenCardModal = (id: number) => {
-    setModalIsShown(true);
-    setClickedCardId(id);
-  };
+  // const [clickedCardId, setClickedCardId] = useState(0);
+  // const [modalIsShown, setModalIsShown] = useState(false);
 
   return (
     <>
-      {
-        modalIsShown ? 
-          <EditCardModal
-            columnId={columnId}
-            cardId={clickedCardId}
-            modalIsShown={modalIsShown}
-            setModalIsShown={setModalIsShown}
-          /> :
-          null
-      }
-
       {
         currentCards.map((card) => {
           return (
@@ -48,7 +31,6 @@ const CardItem: FC<CardItemProps> = ({ columnId, comments }) => {
                 <Card.Body>
                   <Card.Title
                     className="card-title border-bottom border-dark"
-                    onClick={() => handleOpenCardModal(card.id)}
                   >
                     <Card.Text
                       className="align-items-center"
@@ -56,7 +38,10 @@ const CardItem: FC<CardItemProps> = ({ columnId, comments }) => {
                     >
                       {card.title}
                     </Card.Text>
-                    <img src={edit} alt="edit card" />
+                    <DropdownMenu
+                      columnId={columnId}
+                      cardId={card.id}
+                    />
                   </Card.Title>
                   <Card.Text>
                     <img
