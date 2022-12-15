@@ -1,6 +1,5 @@
 .card-title {
   display: flex;
-  justify-content: space-between;
   cursor: pointer;
   align-items: start;
   overflow-wrap: break-word;
