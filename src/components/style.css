@@ -1,7 +1,8 @@
 .card-title {
   display: flex;
+  justify-content: space-between;
   cursor: pointer;
-  align-items: start;
+  align-items: flex-start;
   overflow-wrap: break-word;
 }
 
